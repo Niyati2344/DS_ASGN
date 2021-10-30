@@ -1,0 +1,186 @@
+#include <stdio.h>
+#define M 10
+
+void rsm(int a[M][M],int n,int m);
+void cfm(int a[M][M],int cpt[M][3],int n,int m);
+void dsm(int a[M][M],int n,int m);
+void dcm(int cpt[M][3]);
+void st(int cpt1[M][3],int cpt2[M][3]);
+void ft(int cpt1[M][3],int cpt2[M][3]);
+
+int main()
+{	int r,c,k,ch;
+    printf("Enter the number of row: ");
+    scanf("%d",&r);
+    printf("Enter the number of column: ");
+    scanf("%d",&c);
+    int A[r][c];
+    int C1[M][3];
+    int C2[M][3];
+
+    do
+    {
+        printf("1.Read values\n2.Compact array\n3. display sparse\n4.display compact\n5.Simple transpose\n6.Fast Transpose");
+        printf("Enter tyour choice ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:
+                rsm(A,r,c);
+                break;
+            case 2:
+                cfm(A,C1,r,c);
+                break;
+            case 3:
+                dsm(A,r,c);
+                break;
+            case 4:
+                dcm(C1);
+                break;
+            case 5:
+                st(C1,C2);
+                break;
+            case 6:
+                ft(C1,C2);
+                break;
+        }
+        printf("To continue Enter 1:  ");
+        scanf("%d",&ch);
+    }
+    while(ch==1);
+
+    return 0;
+}
+
+void rsm(int a[M][M],int n,int m)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            printf("Enter the element: ");
+            scanf("%d",&a[i][j]);
+        }
+    }
+}
+
+void cfm(int a[M][M],int cpt[M][3],int n,int m)
+{
+    int k=1;int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            if(a[i][j]!=0)
+            {
+                cpt[k][0]=i;
+                cpt[k][1]=j;
+                cpt[k][2]=a[i][j];
+                k++;
+            }
+        }
+    }
+    cpt[0][0]=n;
+    cpt[0][1]=m;
+    cpt[0][2]=k-1;
+}
+
+void dsm(int a[M][M],int n,int m)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            printf("%d ",a[i][j]);
+        }
+        printf("\n");
+    }
+}
+void dcm(int cpt[M][3])
+{
+    int i,j,k=0;
+    k=cpt[0][2];
+    printf("%d\n",k);
+    for(i=0;i<=k;i++)
+    {
+        for(j=0;j<3;j++)
+        {
+            printf("%d ",cpt[i][j]);
+        }
+        printf("\n");
+    }
+}
+void st(int cpt1[M][3],int cpt2[M][3])
+{
+    int i,j;
+    int k=1;
+    for(i=0;i<cpt1[0][1];i++)
+    {
+        for(j=0;j<=cpt1[0][2];j++)
+        {
+            if(i==cpt1[j][1])
+            {
+                cpt2[k][0]=i;
+                cpt2[k][1]=cpt1[j][0];
+                cpt2[k][2]=cpt1[j][2];
+                k++;
+            }
+        }
+    }
+    cpt2[0][0]=cpt1[0][1];
+    cpt2[0][1]=cpt1[0][0];
+    cpt2[0][2]=cpt1[0][2];
+
+    for(i=0;i<=cpt2[0][2];i++)
+    {
+        for(j=0;j<3;j++)
+        {
+            printf("%d ",cpt2[i][j]);
+        }
+        printf("\n");
+    }
+}
+void ft(int cpt1[M][3],int cpt2[M][3])
+{
+    int i,j;
+    int n;
+    n=cpt1[0][1];
+    int S[n],T[n];
+    for(i=0;i<cpt1[0][1];i++)
+    {
+        S[i]=0;
+    }
+    for(i=1;i<=cpt1[0][2];i++)
+    {
+        j=cpt1[i][1];
+        S[cpt1[i][1]]=S[cpt1[i][1]]+1;
+    }
+    for(i=0;i<cpt1[0][1];i++)
+
+        T[0]=1;
+    for(i=1;i<cpt1[0][1];i++)
+    {
+        T[i]=T[i-1]+S[i-1];
+    }
+    for(i=1;i<=cpt1[0][2];i++)
+    {
+        j=cpt1[i][1];
+
+        cpt2[T[j]][0]=cpt1[i][1];
+        cpt2[T[j]][1]=cpt1[i][0];
+        cpt2[T[j]][2]=cpt1[i][2];
+        T[j]=T[j]+1;
+    }
+    cpt2[0][0]=cpt1[0][1];
+    cpt2[0][1]=cpt1[0][0];
+    cpt2[0][2]=cpt1[0][2];
+    for(i=0;i<=cpt1[0][2];i++)
+    {
+        for(j=0;j<3;j++)
+        {
+            printf("%d ",cpt2[i][j]);
+        }
+        printf("\n");
+    }
