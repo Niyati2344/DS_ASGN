@@ -1,0 +1,125 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define max 3
+struct pizza {
+    char name[10], add[10];
+    int quantity, id;
+}pizza[max];
+int rear=-1,front=-1;
+int id=1;
+void insert();
+void del();
+void display();
+int isfull();
+int isempty();
+int main() {
+    int ch;
+    while (1) {
+        printf("\n1.place an order\n2.dispatch an order\n3.display entire orders\n4.exit\n");
+        printf("\nenter the choice : ");
+        scanf("%d", &ch);
+        switch(ch){
+            case 1:
+                insert();
+                break;
+            case 2:
+                del();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                exit(1);
+            default :
+                printf("\nenter valid choice");
+        }
+    }
+    return 0;
+}
+void insert(){
+    if(isfull()){
+        printf("\norder overflow ");
+        return ;
+    }
+    if(front==-1){
+        front=0;
+    }
+    if(rear==max-1){
+        rear=0;
+    }
+    else {
+        rear = rear + 1;
+        pizza[rear].id=id++;
+        printf("\nname : ");
+        scanf("%s",pizza[rear].name);
+        printf("\naddress : ");
+        scanf("%s",pizza[rear].add);
+        printf("\nquantity : ");
+        scanf("%d",&pizza[rear].quantity);
+    }
+
+
+}
+void del(){
+    if(!isempty()){
+        printf("\ndispatch order is : %d\n",pizza[front].id);
+        front++;
+    }
+    else{
+        printf("\norder underflow");
+    }
+    if(front==rear){
+        front=-1;
+        rear=-1;
+    }
+    if(front==max-1){
+        front=0;
+    }
+}
+int isfull(){
+    if((front==0&&rear==max-1) || (front==rear+1)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+int isempty(){
+    if(front==-1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+void display(){
+    int i;
+    if(isempty()){
+        printf("\norder list is empty");
+        return;
+    }
+    printf("\nthe order list is : ");
+    i=front;
+    if(front<=rear)
+        while(i<=rear){
+            printf("\norder id : %d",pizza[i].id);
+            printf("\nname : %s",pizza[i].name);
+            printf("\naddress : %s",pizza[i].add);
+            i++;
+        }
+    else{
+        while(i<=max-1){
+            printf("\norder id : %d",pizza[i].id);
+            printf("\nname : %s",pizza[i].name);
+            printf("\naddress : %s",pizza[i].add);
+            i++;
+        }
+        i=0;
+        while(i<=rear){
+            printf("\norder id : %d",pizza[i].id);
+            printf("\nname : %s",pizza[i].name);
+            printf("\naddress : %s\n",pizza[i].add);
+            i++;
+        }
+    }
+}
