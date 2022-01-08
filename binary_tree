@@ -1,0 +1,195 @@
+#include <iostream>
+#define max 50
+using namespace std;
+struct node{
+    int data;
+    node *left;
+    node *right;
+
+};
+void preorder(struct node *t){
+
+    if(t==NULL)
+        return;
+    cout<<t->data;
+    preorder(t->left);
+    preorder(t->right);
+
+}
+void inorder(struct node *t){
+
+    if(t==NULL)
+        return;
+    inorder(t->left);
+    cout<<t->data;
+    inorder(t->right);
+}
+void postorder(struct node *t){
+
+    if(t==NULL)
+        return;
+    postorder(t->left);
+
+    postorder(t->right);
+    cout<<t->data;
+}
+
+struct node *create()
+{
+    int x;
+    cout<<"enter the value x : ";
+    cin>>x;
+    if(x==-1)
+        return NULL;
+
+    node *p=new node;
+    p->data=x;
+    cout<<"enter left part of " << x<<endl;
+    p->left=create();
+    cout<<"enter right part of " << x<<endl;
+    p->right=create();
+
+    return p;
+}
+struct node *stack[max];
+int top=-1;
+void push_stack(struct node *item){
+    if(top==(max-1)) {
+        cout << "stack is overflow";
+        return;
+    }
+    top=top+1;
+    stack[top]=item;
+}
+struct node  *pop_stack(){
+    struct node *item;
+    if(top==-1) {
+        cout << "stack is underflow";
+        exit(1);
+    }
+    item=stack[top];
+    top=top-1;
+    return item;
+}
+int stack_empty(){
+    if(top==-1)
+        return 1;
+    else
+        return 0;
+}
+struct node *stack2[max];
+int top2=-1;
+void push_stack2(struct node *item2){
+    if(top2==(max-1)) {
+        cout << "stack is overflow";
+        return;
+    }
+    top2=top2+1;
+    stack2[top2]=item2;
+}
+struct node  *pop_stack2(){
+    struct node *item2;
+    if(top2==-1) {
+        cout << "stack is underflow";
+        exit(1);
+    }
+    item2=stack2[top2];
+    top2=top2-1;
+    return item2;
+}
+int stack2_empty(){
+    if(top2==-1)
+        return 1;
+    else
+        return 0;
+}
+void inorder_nr(struct node *root) {
+    node *curr =new node;
+    curr=root;
+    cout<<"inorder : ";
+    do {
+        while (curr != NULL) {
+            push_stack(curr);
+            curr=curr->left;
+        }
+        curr=pop_stack();
+        cout<<curr->data;
+        curr=curr->right;
+    }while( curr!=NULL or stack_empty()==false);
+}
+void preorder_nr(struct node *root) {
+    struct node *curr =new node;
+    curr=root;
+    cout<<"preorder : ";
+    do {
+        while (curr != NULL) {
+            push_stack(curr);
+            cout<<curr->data;
+            curr=curr->left;
+        }
+        curr=pop_stack();
+
+        curr=curr->right;
+    }while(curr!=NULL or stack_empty()==false);
+}
+void postorder_nc(struct node *root){
+    struct node *curr=new node;
+    curr=root;
+    if(curr==NULL)
+        return;
+    push_stack(curr);
+    while(stack_empty()==false){
+        curr=pop_stack();
+        push_stack2(curr);
+        if(curr->left!=NULL)
+            push_stack(curr->left);
+        if(curr->right!=NULL)
+            push_stack(curr->right);
+    }
+    while(stack2_empty()==false){
+        curr=pop_stack2();
+        cout<<curr->data;
+    }
+}
+
+int main(){
+    struct node *p;
+    bool c=1;
+    int ch;
+    while(c){
+        cout<<"1.create"<<endl<<"2.inorder"<<endl<<"3.preorder"<<endl<<"4.postorder\n 5.inorder non recursive\n 6.preorder non recursive\n 7. postorder non recursive"<<endl;
+        cout<<"enter your choice "<<endl;
+        cin>>ch;
+        switch(ch){
+            case 1:
+                p=create();
+                break;
+            case 2:
+                inorder(p);
+                break;
+            case 3:
+                preorder(p);
+                break;
+            case 4:
+                postorder(p);
+                break;
+            case 5:
+                inorder_nr(p);
+                break;
+            case 6:
+                preorder_nr(p);
+                break;
+            case 7:
+                postorder_nc(p);
+                break;
+            default:
+                cout<<"invalid choice"<<endl;
+                break;
+
+        }
+        cout<<"do you want to add another function 0/1 : ";
+        cin>>c;
+
+    }
+    return 0;
+}
